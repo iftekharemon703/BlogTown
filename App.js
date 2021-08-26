@@ -1,20 +1,42 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { BlogList } from "./screens/BlogList";
-import { CreateBlog } from "./screens/CreateBlog";
-import { BlogDetail } from "./screens/BlogDetail";
 
 const Stack = createStackNavigator();
+import { StatusBar } from "expo-status-bar";
+import CreateBlog from "./screens/CreateBlog";
+import BlogList from "./screens/BlogList";
+import BlogDetail from "./screens/BlogDetail";
 
 function MyStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="CreateBlog" component={CreateBlog} />
-      <Stack.Screen name="BlogList" component={BlogList} />
-      <Stack.Screen name="BlogDetail" component={BlogDetail} />
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#341f97",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+      }}
+    >
+      <Stack.Screen
+        name="CreateBlog"
+        component={CreateBlog}
+        options={{ title: "Write Your Blog Here" }}
+      />
+      <Stack.Screen
+        name="BlogsList"
+        component={BlogList}
+        options={{ title: "Blogs List" }}
+      />
+      <Stack.Screen
+        name="BlogDetail"
+        component={BlogDetail}
+        options={{ title: "Blog Detail" }}
+      />
     </Stack.Navigator>
   );
 }

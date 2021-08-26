@@ -1,36 +1,63 @@
 import React, { useState } from "react";
-import { Button, ScrollView, TextInput, View, StyleSheet } from "react-native";
+import { Button, View, StyleSheet, TextInput, ScrollView } from "react-native";
+import firebase from "../database/firebase";
 
-export const CreateBlog = () => {
-  const [state, setState] = useState({
+const CreateBlog = (props) => {
+  const initialState = {
     title: "",
     description: "",
-  });
+  };
+
+  const [state, setState] = useState(initialState);
 
   const handleChangeText = (value, title) => {
     setState({ ...state, [title]: value });
   };
 
+  const createNewBlog = async () => {
+    if (state.title === "") {
+      alert("please provide a title");
+    } else {
+      try {
+        await firebase.db.collection("blogs").add({
+          title: state.title,
+          description: state.description,
+        });
+
+        props.navigation.navigate("BlogsList");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
+      {/* title Input */}
       <View style={styles.inputGroup}>
         <TextInput
-          placeholder="Blog Title"
-          onChangeText={(value) => handleChangeText("title", value)}
+          placeholder="Title"
+          onChangeText={(value) => handleChangeText(value, "title")}
+          value={state.title}
         />
       </View>
+
+      {/* Description Input */}
       <View style={styles.inputGroup}>
         <TextInput
-          style={styles.description}
-          placeholder="Blog Description"
-          onChangeText={(value) => handleChangeText("description", value)}
+          placeholder="Description"
+          multiline={true}
+          numberOfLines={5}
+          onChangeText={(value) => handleChangeText(value, "description")}
+          value={state.description}
         />
       </View>
+
       <View>
         <Button
-          color="#2c3c50"
-          title="Add Blog"
-          onPress={() => console.log(state)}
+          color="#2c3e50"
+          title="Create Blog"
+          onPress={() => createNewBlog()}
         />
       </View>
     </ScrollView>
@@ -49,7 +76,16 @@ const styles = StyleSheet.create({
     borderBottomColor: "#cccccc",
   },
   description: {
-    marginBottom: 40,
+    paddingBottom: 15,
+  },
+  loader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
